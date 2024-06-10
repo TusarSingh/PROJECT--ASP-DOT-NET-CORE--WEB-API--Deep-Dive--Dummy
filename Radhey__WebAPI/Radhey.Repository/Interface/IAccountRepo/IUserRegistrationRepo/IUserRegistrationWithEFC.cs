@@ -1,26 +1,16 @@
-﻿using System;
+﻿using Radhey.Model.CommonModel;
+using Radhey.Model.RequestModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-using Radhey.Model.CommonModel;
-using Radhey.Model.RequestModel;
-
-namespace Radhey.Repository.Interface.IAccountRepo
+namespace Radhey.Repository.Interface.IAccountRepo.IUserRegistrationRepo
 {
-    public interface IAccountRepo
+    public interface IUserRegistrationWithEFC
     {
-
         public Task<ResponseComModel> UserRegistrationCreateAsync(UserRegistrationReqModel userRegistrationReq);
         public Task<ResponseComModel> UserRegistrationCreateAsyncWithPassword(UserRegistrationReqModel userRegistrationReq);
-
-      
-
-
-
-
-
     }
 }

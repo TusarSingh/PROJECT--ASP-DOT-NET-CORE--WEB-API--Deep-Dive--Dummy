@@ -1,0 +1,308 @@
+1
+
+Write Connection String in Radhey.API.appSettings.json File
+
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=TANUCOMPUTER;Initial Catalog=PRTC__PRJT__1__Radhey__WebApi__DotNetCore__8_0;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;"
+    //Connect Timeout=30;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+
+  },
+
+
+------------------------------------------------------
+2
+
+  install                Microsoft.AspNetCore.Identity.EntityFrameworkCore      
+
+
+  Radhey.DAL.IdentityTables
+
+    public class TblApplicationUser : IdentityUser
+    {
+
+        public string FirstName { get; set; }
+
+
+    }
+
+---------------------------------------------------------------
+3
+
+        Radhey.DAL.DatabaseContext
+
+public class RadheyDbContext : IdentityDbContext<TblApplicationUser>
+    {
+        
+        public RadheyDbContext(DbContextOptions<RadheyDbContext> options) : base(options)
+        {
+            
+        }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+
+
+        public DbSet<TblApplicationUser> AspNetUser {  get; set; }
+
+
+    }
+
+
+--------------------------------------------------
+4   
+
+install         Microsoft.EntityFrameworkCore.SqlServer
+
+Program.cs
+
+
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+builder.Services.AddDbContext<RadheyDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+
+builder.Services.AddIdentityCore<TblApplicationUser>().AddEntityFrameworkStores<RadheyDbContext>();
+
+
+----------------------------------------------------------
+5
+
+install     Microsoft.EntityFrameworkCore.Tools
+install         Microsoft.EntityFrameworkCore.SqlServer
+install         Microsoft.EntityFrameworkCore.Design
+
+
+Radhey.DAL
+
+
+install         Microsoft.EntityFrameworkCore.Tool
+install         Microsoft.EntityFrameworkCore.Design
+
+Radhey.API
+
+
+Package manager Console                 Select Project      Radhey.DAL
+
+enable-migrations
+Add-Migration Initial_Model_TblApplicationUser
+Update-Database
+
+--------------------------------------------------------
+6
+
+Radhey.DAL.IdentityTables
+
+TblApplicationUser : IdentityUser
+
+Write a Properties 
+
+  public string LastName { get; set; }
+
+
+----------------------------------------------------------
+7
+
+namespace Radhey.Model.RequestModel
+{
+    public class UserRegistrationReqModel
+    {
+#nullable disable
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Phone { get; set; }
+
+
+
+    }
+}
+
+-----------------------------------------------------------
+8
+
+namespace Radhey.Model.CommonModel
+{
+    public class ResponseComModel
+    {
+#nullable disable
+        public ResponseComModel()
+        {
+            this.StatusCode = (int)HttpStatusCode.OK;
+        }
+
+        public int StatusCode { get; set; }
+
+        public bool IsSuccess { get; set; }
+
+        public string StatusMessage { get; set; }
+
+        
+
+    }
+
+
+    public class ResponseComModel<T> : ResponseComModel
+    {
+        public T Data { get; set; }
+
+        public T ValidationError { get; set; }
+
+
+        //public object ValidationError { get; set; }
+
+        public string Token { get; set; }
+
+    }
+
+
+}
+
+------------------------------------------------------------------------
+9
+
+ public class AccountController : ControllerBase
+    {
+
+        private readonly IAccountBAL _accountBAL;
+
+
+
+        public AccountController(IAccountBAL accountBAL)
+        {
+            this._accountBAL = accountBAL;
+        }
+
+
+        [HttpPost]
+        [Route("UserRegistration")]
+        public async Task<IActionResult> UserRegistration(UserRegistrationReqModel userRegistrationReq)
+        {
+            ResponseComModel apiResponse = new ResponseComModel();
+            
+            if (userRegistrationReq != null)
+            {
+                apiResponse = await _accountBAL.UserRegistration(userRegistrationReq).ConfigureAwait(false);
+            
+                switch (apiResponse.StatusCode)
+                {
+                        case 200:   apiResponse = new ResponseComModel()
+                        {
+                            StatusCode = 200,
+                            IsSuccess = true,
+                            StatusMessage = "User Registration Successfully"
+                        };
+                        return Ok(apiResponse);
+                        
+                        case 400:   apiResponse = new ResponseComModel()
+                            {
+                            StatusCode = 400,
+                            IsSuccess = false,
+                            StatusMessage = "User Registration Failed"
+                        };
+                        return BadRequest(apiResponse);
+                    
+                        default:   apiResponse = new ResponseComModel()
+                        {
+                            StatusCode = 500,
+                            IsSuccess = false,
+                            StatusMessage = "Internal Server Error"
+                        };
+                        return Ok(apiResponse);       
+                }            
+            }
+            else
+            {
+                apiResponse = new ResponseComModel()
+                {
+                    StatusCode = 500,
+                    IsSuccess = false,
+                    StatusMessage = "Internal Server Error"
+                };
+                return Ok(apiResponse);
+            }
+        }
+
+    }
+
+    ==================================================
+    TblApplicationUser User = new TblApplicationUser()
+            {
+                FirstName = userRegistrationReq.FirstName,
+                LastName = userRegistrationReq.LastName,
+                UserName = userRegistrationReq.Email,
+                Email = userRegistrationReq.Email,
+                PasswordHash = userRegistrationReq.Password,
+                PhoneNumber = userRegistrationReq.Phone
+            };
+
+            var saveResult = await _userManager.CreateAsync(User).ConfigureAwait(false);
+
+            if (saveResult.Succeeded)
+            {
+                response.StatusCode = 200;
+            }
+            else
+            {
+                response.StatusCode = 400;
+            }
+
+            return response;
+    ==================================================
+
+builder.Services.AddScoped<IAccountBAL, AccountBAL>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+
+
+-----------------------------------------------------------------------------------------------
+10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
