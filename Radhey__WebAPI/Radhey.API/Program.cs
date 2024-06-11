@@ -13,16 +13,14 @@ using Radhey.Repository.Interface.IAccountRepo;
 using Radhey.Repository.Implementation.AccountRepo;
 using Radhey.Repository.Interface.IAccountRepo.IUserRegistrationRepo;
 using Radhey.Repository.Implementation.AccountRepo.UserRegistrationRepo;
+using Radhey.Repository.Interface.IAccountRepo.IUserLoginRepo;
+using Radhey.Repository.Implementation.AccountRepo.UserLoginRepo;
 
 
 using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-
-
 
 // Add services to the container.
 
@@ -46,6 +44,7 @@ builder.Services.AddTransient<IAccountBAL, AccountBAL>();
 builder.Services.AddTransient<IAccountRepo, AccountRepo>();
 
 builder.Services.AddTransient<IUserRegistrationWithEFC, UserRegistrationWithEFC>();
+builder.Services.AddScoped<IUserLoginWithEFC, UserLoginWithEFC>();
 
 
 builder.Services.AddTransient<ICustomUserManager, CustomUserManager>();

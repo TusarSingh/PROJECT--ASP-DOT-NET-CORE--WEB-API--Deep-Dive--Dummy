@@ -63,7 +63,18 @@ namespace Radhey.BAL.Implementation.AccountBAL
 
         #endregion
 
- 
+        #region UserLogin
+
+        public async Task<ResponseComModel<object>> UserLogin(UserLoginReqModel userLoginReq)
+        {
+            ResponseComModel<object> response = new ResponseComModel<object>();
+
+            response = await _accountRepo.UserLogin(userLoginReq).ConfigureAwait(false);
+
+            return response;
+        }
+
+        #endregion
 
 
 

@@ -141,7 +141,76 @@ namespace Radhey.API.Controllers
 
         #endregion
 
-       
+        #region User Login
+
+        [HttpPost]
+        [Route("UserLogin")]
+
+        public async Task<IActionResult> UserLogin(UserLoginReqModel userLoginReq)
+        {
+            ResponseComModel<object> apiResponse;
+
+            if (userLoginReq != null)
+            {
+                apiResponse = await _accountBAL.UserLogin(userLoginReq);
+
+                switch (apiResponse.StatusCode)
+                {
+                    case 200:
+                        apiResponse = new ResponseComModel<object>()
+                        {
+                            StatusCode = 200,
+                            IsSuccess = true,
+                            Data = apiResponse.Data,
+                            StatusMessage = "Login Successfully"
+
+                        };
+                        return Ok(apiResponse);
+
+                    case 400:
+                        apiResponse = new ResponseComModel<object>()
+                        {
+                            StatusCode = 400,
+                            IsSuccess = false,
+                            StatusMessage = "Check Password Login Failed"
+                        };
+                        return BadRequest(apiResponse);
+
+                    case 401:
+                        apiResponse = new ResponseComModel<object>()
+                        {
+                            StatusCode = 401,
+                            IsSuccess = false,
+                            StatusMessage = "Check Email Login Failed"
+                        };
+                        return BadRequest(apiResponse);
+
+                    default:
+                        apiResponse = new ResponseComModel<object>()
+                        {
+                            StatusCode = 500,
+                            StatusMessage = "Internal Server error",
+                            IsSuccess = false
+                        };
+                        return BadRequest(apiResponse);
+
+                }
+            }
+            else
+            {
+                apiResponse = new ResponseComModel<object>()
+                {
+                    StatusCode = 500,
+                    StatusMessage = "Internal Server error",
+                    IsSuccess = false
+                };
+                return BadRequest(apiResponse);
+
+            }
+
+        }
+
+        #endregion
 
 
 

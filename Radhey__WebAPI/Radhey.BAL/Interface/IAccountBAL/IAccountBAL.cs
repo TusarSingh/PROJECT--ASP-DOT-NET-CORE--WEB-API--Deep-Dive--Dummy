@@ -18,6 +18,6 @@ namespace Radhey.BAL.Interface.IAccountBAL
         public Task<ResponseComModel> UserRegistrationCreateAsync(UserRegistrationReqModel userRegistrationReq);
         public Task<ResponseComModel> UserRegistrationCreateAsyncWithPassword(UserRegistrationReqModel userRegistrationReq);
 
-       
+        public Task<ResponseComModel<object>> UserLogin(UserLoginReqModel userLoginReq);
     }
 }

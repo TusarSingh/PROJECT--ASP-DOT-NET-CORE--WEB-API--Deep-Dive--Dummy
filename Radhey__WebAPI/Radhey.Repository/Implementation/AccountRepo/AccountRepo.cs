@@ -11,6 +11,7 @@ using Radhey.DAL.IdentityTables;
 using Radhey.Model.CommonModel;
 using Radhey.Model.RequestModel;
 using Radhey.Repository.Interface.IAccountRepo;
+using Radhey.Repository.Interface.IAccountRepo.IUserLoginRepo;
 using Radhey.Repository.Interface.IAccountRepo.IUserRegistrationRepo;
 
 
@@ -23,16 +24,18 @@ namespace Radhey.Repository.Implementation.AccountRepo
     {
         
         private readonly IUserRegistrationWithEFC _userRegistrationWithEFC;
-
+        private readonly IUserLoginWithEFC _userLoginWithEFC;
 
 
 
 
         public AccountRepo(
-                            IUserRegistrationWithEFC userRegistrationWithEFC
+                            IUserRegistrationWithEFC userRegistrationWithEFC,
+                            IUserLoginWithEFC userLoginWithEFC
                           )
         {
             _userRegistrationWithEFC = userRegistrationWithEFC;
+            _userLoginWithEFC = userLoginWithEFC;
         }
 
 
@@ -70,6 +73,18 @@ namespace Radhey.Repository.Implementation.AccountRepo
         #endregion
 
 
+        #region UserLogin
+
+        public async Task<ResponseComModel<object>> UserLogin(UserLoginReqModel userLoginReq)
+        {
+            ResponseComModel<object> response = new ResponseComModel<object>();
+
+            response = await _userLoginWithEFC.UserLogin(userLoginReq).ConfigureAwait(false);;
+
+            return response;
+        }
+
+        #endregion
 
 
     }

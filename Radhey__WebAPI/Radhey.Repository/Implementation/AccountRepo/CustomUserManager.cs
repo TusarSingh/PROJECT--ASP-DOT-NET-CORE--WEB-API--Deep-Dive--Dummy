@@ -30,7 +30,43 @@ namespace Radhey.Repository.Implementation.AccountRepo
 
         }
 
-        
+
+
+        #region User Registration
+        public async Task<IdentityResult> PostCreateAsync(TblApplicationUser user)
+        {
+            var a = await _userManager.CreateAsync(user);
+            return a;
+        }
+
+
+        public async Task<IdentityResult> PostCreateAsync(TblApplicationUser user, string password)
+        {
+            var a = await _userManager.CreateAsync(user, password);
+            return a;
+        }
+
+        #endregion
+
+
+
+
+        #region User Login
+        public async Task<TblApplicationUser?> GetFindByEmailAsync(string email)
+        {
+            var a = await _userManager.FindByEmailAsync(email);
+            return a;
+        }
+
+
+        public async Task<bool> GetCheckPasswordAsync(TblApplicationUser user, string checkPassword)
+        {
+            var a = await _userManager.CheckPasswordAsync(user, checkPassword);
+            return a;
+        }
+
+        #endregion
+
 
         public async Task<IdentityResult> GetAccessFailedAsync(TblApplicationUser user)
         {
@@ -85,11 +121,7 @@ namespace Radhey.Repository.Implementation.AccountRepo
             var a = await _userManager.ChangePhoneNumberAsync(user, changePhoneNumber, token);
             return a;
         }
-        public async Task<bool> GetCheckPasswordAsync(TblApplicationUser user,string checkPassword)
-        {
-            var a = await _userManager.CheckPasswordAsync(user, checkPassword);
-            return a;
-        }
+        
         public async Task<IdentityResult> GetConfirmEmailAsync(TblApplicationUser user,string token)
         {
             var a = await _userManager.ConfirmEmailAsync(user, token);
@@ -101,21 +133,7 @@ namespace Radhey.Repository.Implementation.AccountRepo
             return a;
         }
 
-        #region CreateAsync   use for User Registration
-        public async Task<IdentityResult> PostCreateAsync(TblApplicationUser user)
-        {
-            var a = await _userManager.CreateAsync(user);
-            return a;
-        }
 
-
-        public async Task<IdentityResult> PostCreateAsync(TblApplicationUser user, string password)
-        {
-            var a = await _userManager.CreateAsync(user, password);
-            return a;
-        }
-
-        #endregion
         public async Task<byte[]> GetCreateSecurityTokenAsync(TblApplicationUser user)
         {
             var a = await _userManager.CreateSecurityTokenAsync(user);
@@ -143,11 +161,7 @@ namespace Radhey.Repository.Implementation.AccountRepo
         //    return a;
         //}
 
-        public async Task<TblApplicationUser?> GetFindByEmailAsync(string email)
-        {
-            var a = await _userManager.FindByEmailAsync(email);
-            return a;
-        }
+
 
         public async Task<TblApplicationUser?> GetFindByIdAsync(string userId)
         {
