@@ -17,11 +17,13 @@ namespace Radhey.Repository.Implementation.AccountRepo
         private readonly SignInManager<TblApplicationUser> _signInManager;
         
 
-        public CustomSignInManager(SignInManager<TblApplicationUser> signInManager
-                                    , UserManager<TblApplicationUser> userManager)
+        public CustomSignInManager(
+                                    UserManager<TblApplicationUser> userManager,
+                                    SignInManager<TblApplicationUser> signInManager
+                                  )
         {
-            this._signInManager = signInManager;
-            this._userManager = userManager;
+           this._userManager = userManager;
+           this._signInManager = signInManager;
         }
 
         #region User Login 

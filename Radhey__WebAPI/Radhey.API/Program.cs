@@ -15,9 +15,12 @@ using Radhey.Repository.Interface.IAccountRepo.IUserRegistrationRepo;
 using Radhey.Repository.Implementation.AccountRepo.UserRegistrationRepo;
 using Radhey.Repository.Interface.IAccountRepo.IUserLoginRepo;
 using Radhey.Repository.Implementation.AccountRepo.UserLoginRepo;
+using Radhey.Repository.Interface.IAccountRepo.IGetAllUserRepo;
+using Radhey.Repository.Implementation.AccountRepo.GetAllUserRepo;
 
 
 using Microsoft.AspNetCore.Identity;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,15 +47,17 @@ builder.Services.AddTransient<IAccountBAL, AccountBAL>();
 builder.Services.AddTransient<IAccountRepo, AccountRepo>();
 
 builder.Services.AddTransient<IUserRegistrationWithEFC, UserRegistrationWithEFC>();
-builder.Services.AddScoped<IUserLoginWithEFC, UserLoginWithEFC>();
+builder.Services.AddTransient<IUserLoginWithEFC, UserLoginWithEFC>();
+
+builder.Services.AddTransient<IGetAllUserWithEFC, GetAllUserWithEFC>();
 
 
 builder.Services.AddTransient<ICustomUserManager, CustomUserManager>();
 builder.Services.AddTransient<ICustomSignInManager, CustomSignInManager>();
 
 
-builder.Services.AddTransient<UserManager<TblApplicationUser>>();
-builder.Services.AddTransient<SignInManager<TblApplicationUser>>();
+builder.Services.AddScoped<UserManager<TblApplicationUser>>();
+builder.Services.AddScoped<SignInManager<TblApplicationUser>>();
 
 
 

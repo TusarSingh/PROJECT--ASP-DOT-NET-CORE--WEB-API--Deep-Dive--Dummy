@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Radhey.DAL.IdentityTables;
+using Radhey.Model.CommonModel;
 using Radhey.Repository.Interface.IAccountRepo;
 using Radhey.Utility.Common;
 using System;
@@ -64,6 +66,38 @@ namespace Radhey.Repository.Implementation.AccountRepo
             var a = await _userManager.CheckPasswordAsync(user, checkPassword);
             return a;
         }
+
+        #endregion
+
+
+
+        #region Use Properties for GetAllUsers
+
+        public async Task<ResponseComModel<object>> GetUser()
+        {
+            ResponseComModel<object> response = new ResponseComModel<object>();
+
+            var allUser = await _userManager.Users.ToListAsync().ConfigureAwait(false);
+
+            if(allUser == null)
+            {
+                response.StatusCode = 401;
+            }
+            else
+            {
+                response.StatusCode = 200;
+                response.Data = allUser;
+
+            }
+
+            return response;
+        }
+
+
+
+
+
+
 
         #endregion
 
@@ -624,8 +658,7 @@ namespace Radhey.Repository.Implementation.AccountRepo
         }
         
 
-
-
+      
 
 
 

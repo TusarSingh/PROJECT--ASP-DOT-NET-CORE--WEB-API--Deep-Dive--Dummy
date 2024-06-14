@@ -18,7 +18,7 @@ namespace Radhey.Repository.Interface.IAccountRepo
 
         public Task<ResponseComModel<object>> UserLogin(UserLoginReqModel userLoginReq);
 
-
+        public Task<ResponseComModel<object>> GetAllUser();
 
 
 
